@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<머리>
+ <meta charset=>UTF-8" />
+ <title>비밀요원 레너드 대출 시스템</title>
+ <meta 이름="viewport" 콘텐츠="width=장치 너비, 초기 규모=1.0"/>
+ <스타일>
+ 본문 {폰트 패밀리: 산세리프; 패딩: 20 px; 텍스트 align: 센터; }
+ h1 { 글꼴 크기: 24 px; }
+ .상태 { 여백: 0 px 20개; 글꼴 크기: 20 px; }
+ 버튼 {
+ 패딩: 14 px 28 px;
+ 글꼴 크기: 18 px;
+ 경계: 없음;
+ 국경 radius: 8 px;
+ 커서: 포인터;
+ 배경색: #007bff;
+ 색상: 흰색;
+ }
+ button.retturn {background-color: #dc3545; }
+ .노트 { 글꼴 크기: 14 px; 색상: #777; 여백 상단: 10 px; }
+ </스타일>
+</머리>
+<바디>
+ <h1>📖 비밀요윈 래너드</h1>
+ <div class="status" id="status-text">상태 확인 중...</div>
+ <버튼 ID="borrow 버튼">📥 대출하기</버튼>
+ <버튼 ID="리턴 버튼" 클래스="리턴" 스타일="디스플레이:none;">📤반납하기</버튼>
+ <div class="note" id="note-text"></div>
+
+ <스크립트>
+ constparams = new URLesearchParams(window.location).검색);
+ const는 CheckMode = params.get ("mode") === "check"; // 도서관 확인 전용 모드
+
+ const bookKey = "bimilion_only_this_device";
+
+ constrawBtn = document.getElementById("빌리기 버튼");
+ const returnBtn = document.getElementById("리턴 버튼");
+ const 상태텍스트 = document.getElementById("상태-텍스트");
+ const noteText = document.getElementById("note-text");
+
+ 함수 업데이트UI() {
+ constitution is Borrowed = localStorage.getItem(bookKey) === "borrowed";
+
+ 만약 (isCheckMode) {
+ // 도서관 확인 전용 기기
+ (빌려진 경우) {
+ statusText.textContent = "✅ 이 기기에서 대출 중입니다";
+ } 그 외 {
+ statusText.textContent = "❌ 이 기기에서는 대출 기록이 없습니다.";
+ }
+ borrowBtn.style.display = "none";
+ returnBtn.style.display = "none";
+ noteText.textContent = "※ 이 페이지는 도서관 확인 전용입니다.";
+ } 그 외 {
+ // 일반 대출/반납 모드
+ (빌려진 경우) {
+ statusText.textContent = "📚 이 기기에서 대출 중입니다";
+ borrowBtn.style.display = "none";
+ returnBtn.style.display = "inline 차단";
+ noteText.textContent = "※ 이 상태는 이 기기에서만 유지됩니다.";
+ } 그 외 {
+ statusText.textContent = "📕 반납됨";
+ borrowBtn.style.display = "inline-블록";
+ returnBtn.style.display = "none";
+ noteText.textContent = "※ 대출 시 이 기기에서만 반납할 수 있습니다.";
+ }
+ }
+ }
+
+ borrowBtn.addEventListener("클릭", () => {
+ 로컬 스토리지.setItem(bookKey, "빌린");
+ 갱신하다UI();
+ });
+
+ returnBtn.addEventListener("클릭", () => {
+ 로컬 스토리지.setItem(bookKey, "반납");
+ 갱신하다UI();
+ });
+
+ 갱신하다UI();
+ </script>
+</body>
+</html>
