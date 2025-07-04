@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>책 이름 : 비밀요원 레너드</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body { font-family: sans-serif; padding: 20px; text-align: center; }
+    h1 { font-size: 24px; }
+    .status { margin: 20px 0; font-size: 20px; }
+    button {
+      padding: 14px 28px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+    }
+    button.return { background-color: #dc3545; }
+    .note { font-size: 14px; color: #777; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>📖 비밀요원 레너드</h1>
+  <div class="status" id="status-text">상태 확인 중...</div>
+  <button id="borrow-button">📥 대출하기</button>
+  <button id="return-button" class="return" style="display:none;">📤 반납하기</button>
+  <div class="note" id="note-text"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const isCheckMode = params.get("mode") === "check"; // 도서관 확인 전용 모드
+
+    const bookKey = "bimilion_only_this_device";
+
+    const borrowBtn = document.getElementById("borrow-button");
+    const returnBtn = document.getElementById("return-button");
+    const statusText = document.getElementById("status-text");
+    const noteText = document.getElementById("note-text");
+
+    function updateUI() {
+      const isBorrowed = localStorage.getItem(bookKey) === "borrowed";
+
+      if (isCheckMode) {
+        // 도서관 확인 전용 기기
+        if (isBorrowed) {
+          statusText.textContent = "✅ 이 기기에서 대출 중입니다.";
+        } else {
+          statusText.textContent = "❌ 이 기기에서는 대출 기록이 없습니다.";
+        }
+        borrowBtn.style.display = "none";
+        returnBtn.style.display = "none";
+        noteText.textContent = "※ 이 페이지는 도서관 확인 전용입니다.";
+      } else {
+        // 일반 대출/반납 모드
+        if (isBorrowed) {
+          statusText.textContent = "📚 이 기기에서 대출 중입니다.";
+          borrowBtn.style.display = "none";
+          returnBtn.style.display = "inline-block";
+          noteText.textContent = "※ 이 상태는 이 기기에서만 유지됩니다.";
+        } else {
+          statusText.textContent = "📕 반납됨";
+          borrowBtn.style.display = "inline-block";
+          returnBtn.style.display = "none";
+          noteText.textContent = "※ 대출 시 이 기기에서만 반납할 수 있습니다.";
+        }
+      }
+    }
+
+    borrowBtn.addEventListener("click", () => {
+      localStorage.setItem(bookKey, "borrowed");
+      updateUI();
+    });
+
+    returnBtn.addEventListener("click", () => {
+      localStorage.setItem(bookKey, "returned");
+      updateUI();
+    });
+
+    updateUI();
+  </script>
+</body>
+</html>
+
+
